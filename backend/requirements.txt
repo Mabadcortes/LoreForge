@@ -1,0 +1,15 @@
+# Web framework and ASGI server
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+
+# Database drivers and ORM
+psycopg[binary]>=3.1.18
+sqlalchemy>=2.0.28
+pgvector>=0.2.5
+
+# Data validation and settings management
+pydantic>=2.6.0
+pydantic-settings>=2.2.1
+
+# Environment variables loader
+python-dotenv>=1.0.1

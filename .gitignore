@@ -1,0 +1,30 @@
+# Environment variables and secrets (NEVER commit to version control)
+.env
+.env.local
+.env.*.local
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Local database persistent data (managed by Docker volume)
+postgres_data/
+
+# Frontend dependencies and build output (for Next.js)
+node_modules/
+.next/
+out/
+build/
+
+# Operating system files
+.DS_Store
+Thumbs.db

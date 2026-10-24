@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------
+  # Database Service: PostgreSQL 16 with pgvector extension
+  # -------------------------------------------------------------
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: loreforge_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # Exposes database to localhost for management tools (DBeaver, TablePlus)
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      # Persist database files outside container lifecycle
+      - postgres_data:/var/lib/postgresql/data
+
+  # -------------------------------------------------------------
+  # Backend API Service: FastAPI + Python LLM Engine
+  # -------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: loreforge_backend
+    restart: always
+    ports:
+      # Maps port 8000 of the container to port 8000 on your host machine
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - AI_API_KEY=${AI_API_KEY}
+    volumes:
+      # Live reload: syncs local edits directly into the container
+      - ./backend/app:/app/app
+    depends_on:
+      - db
+
+# Persistent named volumes declared here
+volumes:
+  postgres_data:
