@@ -165,3 +165,19 @@ reviewers. Do this as part of the same change, not later:
 7. [ ] README in English + tag `v0.0.1`
 
 Update this checklist as steps are completed.
+
+## Backlog (follow-ups from reviews)
+
+Known improvements, not urgent. Each one has the step or phase where it fits best.
+When doing that work, include the item, then move it to "Done" with the commit.
+
+| # | Item | When | Notes |
+| --- | --- | --- | --- |
+| B1 | Split API tests from real integration tests | Phase 0 · step 6 | Current `tests/integration/` uses a fake session (no DB). Move them to `tests/api/` and keep `tests/integration/` for tests against a real PostgreSQL service in CI. |
+| B2 | Timeout on the `/health` database check | Phase 7 (before Kubernetes probes) | A hung network connection could make `SELECT 1` wait too long. Add a short timeout (e.g. `asyncio.timeout` / statement timeout) and return 503 when it expires. Write an engineering note. |
+| B3 | Separate liveness and readiness probes | Phase 7 | `/health/live` (process is up, no DB) and `/health/ready` (can serve requests, checks DB). Map them to Kubernetes `livenessProbe` and `readinessProbe`. Consider an ADR. |
+| B4 | Structured, uniform logging | Phase 1, or earlier if logs get noisy | `app/core/logging.py`: one format for app and uvicorn logs, level from settings, request id per request; JSON format in production. |
+
+### Done
+
+_Nothing yet._
