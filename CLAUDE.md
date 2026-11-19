@@ -54,7 +54,8 @@ I am learning backend, frontend and architecture with this project.
 | --- | --- |
 | Language | Code, commits, docs and **UI in English**. Chat narration language configurable per campaign (Spanish by default). |
 | Rules | D&D 2024 rules ("5.5") from **SRD 5.2.1** (CC-BY-4.0, attribution required). Missing content = homebrew. |
-| Backend | Python 3.11, FastAPI, Pydantic v2 + pydantic-settings, SQLAlchemy 2.0, **Alembic from day 1** (never `create_all()`). |
+| Backend | Python 3.11, FastAPI, Pydantic v2 + pydantic-settings, SQLAlchemy 2.0 **async with psycopg 3** (ADR 0001), **Alembic from day 1** (never `create_all()`). |
+| Python tooling | **uv** with `uv.lock` committed: local, Docker and CI install the same versions (`uv sync --locked`). |
 | Database | PostgreSQL 16 + pgvector (`pgvector/pgvector:pg16`). |
 | Frontend | **Next.js (App Router) + React + TypeScript**, used **only as frontend**; FastAPI is the only backend. Tailwind CSS + shadcn/ui, TanStack Query. |
 | Streaming | Server-Sent Events (SSE) for narration. |
@@ -114,6 +115,12 @@ README.md
 - Windows + Docker Desktop (WSL2), Docker 29.9.3, Compose v5.7.0, Git 2.56.0,
   VS Code 1.146.0. Shell: PowerShell.
 - Python: use `py -3.11` (Python 3.13 is also installed; plain `python` may be 3.13).
+  In `backend/`, uv picks 3.11 from `.python-version`; run tools with `uv run ...`.
+- Run the backend on Windows with
+  `uv run uvicorn app.main:create_app --factory --reload --loop asyncio:SelectorEventLoop`
+  (psycopg async cannot use the default ProactorEventLoop), or F5 "Backend: uvicorn".
+- `.env` uses `POSTGRES_HOST=localhost` for running on the host; docker-compose
+  overrides it with `db`.
 - **A native Windows PostgreSQL 17 service (`postgresql-x64-17`) exists.** It is
   stopped and set to Manual so the `db` container can use port 5432. If the container
   fails with "port is already allocated", check that service first.
@@ -135,7 +142,7 @@ README.md
 
 1. [x] Tag prototype as `v0-prototype`, clear `main`
 2. [x] Root files: `.gitignore`, `.gitattributes`, `.editorconfig`, `.env.example`, `LICENSE`, `.vscode/`, `CLAUDE.md`
-3. [ ] Backend skeleton: FastAPI + `/health`, settings, DB session, Alembic, pytest, ruff, mypy (`pyproject.toml`)
+3. [x] Backend skeleton: FastAPI + `/health`, settings, DB session, Alembic, pytest, ruff, mypy (`pyproject.toml`)
 4. [ ] Frontend skeleton: Next.js + TypeScript + Tailwind + ESLint, page calling `/health`
 5. [ ] `docker-compose.yml`: `db`, `backend`, `frontend` with healthchecks and hot reload
 6. [ ] GitHub Actions: lint, type check, tests (backend with a Postgres service), frontend build

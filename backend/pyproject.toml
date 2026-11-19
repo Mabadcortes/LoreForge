@@ -1,0 +1,74 @@
+[project]
+name = "loreforge-backend"
+version = "0.0.1"
+description = "LoreForge backend: FastAPI API, D&D rules engine and AI Director."
+license = "MIT"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "psycopg[binary]>=3.2",
+    "alembic>=1.16",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "httpx2>=2.16.2",
+]
+
+[tool.uv]
+# This is an application, not a library: uv installs its dependencies
+# but does not build or install the project itself as a package.
+package = false
+
+# --- Ruff (formatter + linter) ---
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E", "W",  # pycodestyle
+    "F",       # pyflakes
+    "I",       # isort
+    "B",       # flake8-bugbear
+    "UP",      # pyupgrade
+    "N",       # pep8-naming
+    "SIM",     # flake8-simplify
+    "C4",      # flake8-comprehensions
+    "ASYNC",   # flake8-async
+    "PT",      # flake8-pytest-style
+    "RUF",     # ruff-specific rules
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+# The local "alembic/" folder would otherwise make ruff treat the installed
+# alembic package as first-party.
+known-third-party = ["alembic"]
+
+# --- Mypy ---
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+# The local "alembic/" migrations folder would shadow the installed alembic
+# package for mypy, so migrations are not type checked.
+files = ["app", "tests"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+# --- Pytest ---
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["-ra", "--strict-markers"]
