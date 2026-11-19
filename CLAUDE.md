@@ -110,6 +110,22 @@ README.md
   from `POSTGRES_*` parts (no duplicated `DATABASE_URL`).
 - Every important decision gets a short ADR in `docs/adr/`.
 
+## Documentation duties
+
+The repository is a portfolio piece, so decisions and lessons must be visible to
+reviewers. Do this as part of the same change, not later:
+
+- **New significant decision** (library, pattern, trade-off) → write an ADR in
+  `docs/adr/NNNN-short-title.md` with *Context, Decision, Alternatives considered,
+  Consequences*, and add it to the ADR table in `docs/architecture.md`.
+- **Non-trivial problem solved** (bug, environment issue, surprising behaviour) →
+  add an entry at the top of `docs/engineering-notes.md` with *Problem, Cause,
+  Solution, Takeaway*.
+- **Architecture changes** → keep `docs/architecture.md` in sync, and update the
+  status line and roadmap table when a phase or step is completed.
+- Docs are written in English, concise and factual. Do not describe features as
+  implemented before they are.
+
 ## Development environment (Windows)
 
 - Windows + Docker Desktop (WSL2), Docker 29.9.3, Compose v5.7.0, Git 2.56.0,
